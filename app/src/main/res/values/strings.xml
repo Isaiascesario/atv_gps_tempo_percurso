@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Calcula Percurso e Tempo - GPS</string>
+    <string name="action_settings">Settings</string>
+    <string name="btn_grant_gps">Grant GPS permission</string>
+    <string name="btn_activate">Activate GPS</string>
+    <string name="btn_deactivate">Deactivate GPS</string>
+    <string name="btn_start">Start Route</string>
+    <string name="btn_finish">Finish Route</string>
+    <string name="travelled_distance">Travelled\nDistance:</string>
+    <string name="past_time">Past Time:</string>
+    <string name="search">What do you want to find?</string>
+    <string name="uri_mapa">geo:%f, %f?q=%s</string>
+</resources>

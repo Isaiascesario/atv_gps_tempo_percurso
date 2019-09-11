@@ -1,0 +1,7 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="btn_margin">5dp</dimen>
+    <dimen name="btn_txtSize">25sp</dimen>
+    <dimen name="txtView_margin">5dp</dimen>
+    <dimen name="txtInput_margin">8dp</dimen>
+</resources>

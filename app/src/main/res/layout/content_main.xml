@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:columnCount="4"
+    android:rowCount="6"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".MainActivity"
+    tools:showIn="@layout/activity_main">
+
+
+    <Button
+        android:id="@+id/grantGpsPermission"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/btn_margin"
+        android:layout_row="0"
+        android:layout_column="0"
+        android:layout_columnSpan="4"
+        android:layout_gravity="fill_horizontal"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/btn_textColor"
+        android:textSize="@dimen/btn_txtSize"
+        android:text="@string/btn_grant_gps" />
+
+    <Button
+        android:id="@+id/btnActivateGps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="fill_horizontal"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/btn_textColor"
+        android:textSize="@dimen/btn_txtSize"
+        android:layout_margin="@dimen/btn_margin"
+        android:layout_column="0"
+        android:layout_columnSpan="2"
+        android:layout_columnWeight="1"
+        android:layout_row="1"
+        android:text="@string/btn_activate" />
+
+    <Button
+        android:id="@+id/btnDeactivateGps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="fill_horizontal"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/btn_textColor"
+        android:layout_columnSpan="2"
+        android:layout_margin="@dimen/btn_margin"
+        android:textSize="@dimen/btn_txtSize"
+        android:layout_column="2"
+        android:layout_columnWeight="1"
+        android:layout_row="1"
+        android:text="@string/btn_deactivate" />
+
+    <Button
+        android:id="@+id/btnStartRoute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="fill_horizontal"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/btn_textColor"
+        android:textSize="@dimen/btn_txtSize"
+        android:layout_margin="@dimen/btn_margin"
+        android:layout_column="0"
+        android:layout_columnSpan="2"
+        android:layout_columnWeight="1"
+        android:layout_row="2"
+        android:text="@string/btn_start" />
+
+    <Button
+        android:id="@+id/btnFinishRoute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="fill_horizontal"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/btn_textColor"
+        android:layout_margin="@dimen/btn_margin"
+        android:textSize="@dimen/btn_txtSize"
+        android:layout_column="2"
+        android:layout_columnSpan="2"
+        android:layout_columnWeight="1"
+        android:layout_row="2"
+        android:text="@string/btn_finish" />
+
+    <TextView
+        android:id="@+id/distanceTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|center_vertical"
+        android:layout_columnSpan="1"
+        android:layout_column="0"
+        android:layout_row="3"
+        android:textAlignment="center"
+        android:layout_margin="@dimen/txtView_margin"
+        android:text="@string/travelled_distance" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/distanceTextInputLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="3"
+        android:layout_columnSpan="3"
+        android:layout_margin="@dimen/txtView_margin"
+        android:layout_gravity="fill_horizontal">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/timeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|center_vertical"
+        android:layout_columnSpan="1"
+        android:layout_column="0"
+        android:layout_row="4"
+        android:textAlignment="center"
+        android:layout_margin="@dimen/txtView_margin"
+        android:text="@string/past_time" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/timeTextInputLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="4"
+        android:layout_columnSpan="3"
+        android:layout_margin="@dimen/txtView_margin"
+        android:layout_gravity="fill_horizontal">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="time"
+            android:text=""/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/searchTextInputLayout"
+        android:layout_width="309dp"
+        android:layout_height="wrap_content"
+        android:layout_row="5"
+        android:layout_columnSpan="3"
+        android:layout_gravity="fill_horizontal"
+        android:layout_margin="@dimen/txtInput_margin"
+        android:hint="@string/search">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="293dp"
+        android:layout_row="5"
+        android:layout_column="0"
+        android:layout_columnSpan="4"
+        android:layout_gravity="center" />
+
+
+</GridLayout>
+
+
