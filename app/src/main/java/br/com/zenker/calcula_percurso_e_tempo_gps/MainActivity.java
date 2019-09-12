@@ -1,7 +1,9 @@
 package br.com.zenker.calcula_percurso_e_tempo_gps;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -12,12 +14,19 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 
+import android.text.Editable;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.Toast;
+
+import static android.net.Uri.parse;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
     private TextInputLayout searchTextInputLayout;
     private double latitude;
     private double longitude;
-    private String search;
 
     private LocationManager locationManager;
     private LocationListener locationListener;
@@ -45,7 +53,9 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener((v) -> {
             //Uri uri = Uri.parse("geo:%f, %f?q=%s");
-            Uri uri = Uri.parse(getString(R.string.uri_mapa, latitude, longitude, searchTextInputLayout.getEditText()));
+            String search = searchTextInputLayout.getEditText().getText().toString();
+            searchTextInputLayout.getEditText().setText("");
+            Uri uri = parse(getString(R.string.uri_map, latitude, longitude, search));
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             intent.setPackage("com.google.android.apps.maps");
             startActivity(intent);
@@ -74,6 +84,13 @@ public class MainActivity extends AppCompatActivity {
 
             }
         };
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        locationManager.removeUpdates(locationListener);
     }
 
     @Override
@@ -96,5 +113,62 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void GrantGpsPermission(View view) {
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        {
+            Toast.makeText(this, getString(R.string.permission_granted), Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION_CODE_GPS);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == REQUEST_PERMISSION_CODE_GPS)
+        {
+            if(grantResults.length > 0 & grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+                if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                {
+                    Toast.makeText(this, getString(R.string.permission_granted), Toast.LENGTH_SHORT).show();
+                }
+            }
+            else
+            {
+                Toast.makeText(this, getString(R.string.no_gps_no_app), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
+    public void ActivateGps(View view) {
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        {
+            if(locationManager.isProviderEnabled(locationManager.GPS_PROVIDER)) {
+                Toast.makeText(this, getString(R.string.active_gps), Toast.LENGTH_SHORT).show();
+            }
+            else {
+                locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 2000, 10, locationListener);
+                Toast.makeText(this, getString(R.string.gps_on), Toast.LENGTH_SHORT).show();
+            }
+        }
+        else
+        {
+            Toast.makeText(this, getString(R.string.no_gps_no_app), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void DeactivateGps(View view) {
+        if(locationManager.isProviderEnabled(locationManager.GPS_PROVIDER)) {
+            locationManager.removeUpdates(locationListener);
+            Toast.makeText(this, getString(R.string.gps_disabled), Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(this, getString(R.string.gps_already_off), Toast.LENGTH_SHORT).show();
+        }
     }
 }

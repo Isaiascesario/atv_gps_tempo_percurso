@@ -9,5 +9,11 @@
     <string name="travelled_distance">Travelled\nDistance:</string>
     <string name="past_time">Past Time:</string>
     <string name="search">What do you want to find?</string>
-    <string name="uri_mapa">geo:%f, %f?q=%s</string>
+    <string name="uri_map">geo:%f, %f?q=%s</string>
+    <string name="active_gps">The GPS is already active</string>
+    <string name="no_gps_no_app">You need to enable GPS to use the app.</string>
+    <string name="gps_on">The GPS is on</string>
+    <string name="gps_already_off">The GPS is already turned off.</string>
+    <string name="gps_disabled">The GPS is disabled.</string>
+    <string name="permission_granted">The permission for the GPS is already granted.</string>
 </resources>
