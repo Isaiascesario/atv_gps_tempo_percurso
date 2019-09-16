@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
 import androidx.annotation.NonNull;
@@ -19,22 +18,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
-import android.text.Editable;
+import android.os.SystemClock;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
+import android.widget.Chronometer;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import static android.net.Uri.parse;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextInputLayout distanceTextInputLayout;
-    private TextInputLayout timeTextInputLayout;
+    private TextView distanceTextView;
+    private Chronometer timeChronometer;
     private TextInputLayout searchTextInputLayout;
     private double latitude;
     private double longitude;
+    private boolean isGpsActive = false;
 
     private LocationManager locationManager;
     private LocationListener locationListener;
@@ -46,14 +48,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        distanceTextInputLayout = findViewById(R.id.distanceTextInputLayout);
-        timeTextInputLayout = findViewById(R.id.timeTextInputLayout);
+        distanceTextView = findViewById(R.id.distanceTextView);
+        timeChronometer = findViewById(R.id.timeChronometer);
         searchTextInputLayout = findViewById(R.id.searchTextInputLayout);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener((v) -> {
             //Uri uri = Uri.parse("geo:%f, %f?q=%s");
-            String search = searchTextInputLayout.getEditText().getText().toString();
+            String search = searchTextInputLayout.getEditText().toString();
             searchTextInputLayout.getEditText().setText("");
             Uri uri = parse(getString(R.string.uri_map, latitude, longitude, search));
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
@@ -115,14 +117,15 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void GrantGpsPermission(View view) {
+    public void grantGpsPermission(View view) {
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
         {
-            Toast.makeText(this, getString(R.string.permission_granted), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.permission_already_granted), Toast.LENGTH_SHORT).show();
         }
         else
         {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION_CODE_GPS);
+            Toast.makeText(this, getString(R.string.permission_granted), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -145,15 +148,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void ActivateGps(View view) {
+    public void activateGps(View view) {
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
         {
-            if(locationManager.isProviderEnabled(locationManager.GPS_PROVIDER)) {
+            if(isGpsActive) {
                 Toast.makeText(this, getString(R.string.active_gps), Toast.LENGTH_SHORT).show();
             }
             else {
                 locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 2000, 10, locationListener);
                 Toast.makeText(this, getString(R.string.gps_on), Toast.LENGTH_SHORT).show();
+                isGpsActive = true;
             }
         }
         else
@@ -162,13 +166,33 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void DeactivateGps(View view) {
-        if(locationManager.isProviderEnabled(locationManager.GPS_PROVIDER)) {
+    public void deactivateGps(View view) {
+        if(isGpsActive) {
             locationManager.removeUpdates(locationListener);
             Toast.makeText(this, getString(R.string.gps_disabled), Toast.LENGTH_SHORT).show();
+            isGpsActive = false;
         }
         else {
             Toast.makeText(this, getString(R.string.gps_already_off), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void startRoute(View view) {
+        if(!isGpsActive) {
+            Toast.makeText(this, getString(R.string.gps_disabled), Toast.LENGTH_SHORT).show();
+        }
+        else {
+            timeChronometer.setBase(SystemClock.elapsedRealtime());
+            onChronometerTick(timeChronometer);
+        }
+    }
+
+    public void onChronometerTick (Chronometer chronometer) {
+        chronometer.start();
+    }
+
+    public void stopRoute(View view) {
+        timeChronometer.stop();
+        timeChronometer.setBase(SystemClock.elapsedRealtime());
     }
 }

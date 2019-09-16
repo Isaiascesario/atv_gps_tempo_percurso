@@ -15,5 +15,6 @@
     <string name="gps_on">The GPS is on</string>
     <string name="gps_already_off">The GPS is already turned off.</string>
     <string name="gps_disabled">The GPS is disabled.</string>
-    <string name="permission_granted">The permission for the GPS is already granted.</string>
+    <string name="permission_already_granted">The permission for the GPS is already granted.</string>
+    <string name="permission_granted">GPS permission granted.</string>
 </resources>
