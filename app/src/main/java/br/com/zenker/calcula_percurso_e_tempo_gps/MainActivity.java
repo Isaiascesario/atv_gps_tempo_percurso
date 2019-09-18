@@ -27,6 +27,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Locale;
+
 import static android.net.Uri.parse;
 
 public class MainActivity extends AppCompatActivity {
@@ -37,7 +39,10 @@ public class MainActivity extends AppCompatActivity {
     private double latitude;
     private double longitude;
     private boolean isGpsActive = false;
+    private float distance = 0;
 
+    private Location oldLocation;
+    private Location newLocation;
     private LocationManager locationManager;
     private LocationListener locationListener;
     private static final int REQUEST_PERMISSION_CODE_GPS = 1001;
@@ -51,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         distanceTextView = findViewById(R.id.distanceTextView);
         timeChronometer = findViewById(R.id.timeChronometer);
         searchTextInputLayout = findViewById(R.id.searchTextInputLayout);
+        distanceTextView.setText("0.0 m");
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener((v) -> {
@@ -69,6 +75,9 @@ public class MainActivity extends AppCompatActivity {
             public void onLocationChanged(Location location) {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
+                oldLocation = newLocation;
+                newLocation = location;
+                distance = newLocation.distanceTo(oldLocation);
             }
 
             @Override
@@ -184,6 +193,7 @@ public class MainActivity extends AppCompatActivity {
         else {
             timeChronometer.setBase(SystemClock.elapsedRealtime());
             onChronometerTick(timeChronometer);
+            distanceTextView.setText(getString(R.string.distance, distance));
         }
     }
 
@@ -194,5 +204,6 @@ public class MainActivity extends AppCompatActivity {
     public void stopRoute(View view) {
         timeChronometer.stop();
         timeChronometer.setBase(SystemClock.elapsedRealtime());
+        locationManager.removeUpdates(locationListener);
     }
 }
