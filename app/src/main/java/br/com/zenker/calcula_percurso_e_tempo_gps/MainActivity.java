@@ -41,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean isGpsActive = false;
     private float distance = 0;
 
-    private Location oldLocation;
-    private Location newLocation;
+    private Location oldLocation = new Location(Context.LOCATION_SERVICE);
+//    private Location newLocation = new Location(Context.LOCATION_SERVICE);
     private LocationManager locationManager;
     private LocationListener locationListener;
     private static final int REQUEST_PERMISSION_CODE_GPS = 1001;
@@ -56,7 +56,11 @@ public class MainActivity extends AppCompatActivity {
         distanceTextView = findViewById(R.id.distanceTextView);
         timeChronometer = findViewById(R.id.timeChronometer);
         searchTextInputLayout = findViewById(R.id.searchTextInputLayout);
-        distanceTextView.setText("0.0 m");
+        distanceTextView.setText("0.00 m");
+//        oldLocation.setLatitude(latitude);
+//        oldLocation.setLongitude(longitude);
+//        newLocation.setLatitude(latitude);
+//        newLocation.setLongitude(longitude);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener((v) -> {
@@ -75,9 +79,9 @@ public class MainActivity extends AppCompatActivity {
             public void onLocationChanged(Location location) {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
-                oldLocation = newLocation;
-                newLocation = location;
-                distance = newLocation.distanceTo(oldLocation);
+                distance += location.distanceTo(oldLocation);
+                oldLocation = location;
+                distanceTextView.setText(getString(R.string.distance, distance));
             }
 
             @Override
@@ -164,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, getString(R.string.active_gps), Toast.LENGTH_SHORT).show();
             }
             else {
-                locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 2000, 10, locationListener);
+                locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 2000, 1, locationListener);
                 Toast.makeText(this, getString(R.string.gps_on), Toast.LENGTH_SHORT).show();
                 isGpsActive = true;
             }
@@ -193,17 +197,17 @@ public class MainActivity extends AppCompatActivity {
         else {
             timeChronometer.setBase(SystemClock.elapsedRealtime());
             onChronometerTick(timeChronometer);
-            distanceTextView.setText(getString(R.string.distance, distance));
         }
     }
 
     public void onChronometerTick (Chronometer chronometer) {
+        distanceTextView.setText(getString(R.string.distance, distance));
+        timeChronometer.setBase(SystemClock.elapsedRealtime());
         chronometer.start();
     }
 
     public void stopRoute(View view) {
         timeChronometer.stop();
-        timeChronometer.setBase(SystemClock.elapsedRealtime());
         locationManager.removeUpdates(locationListener);
     }
 }
